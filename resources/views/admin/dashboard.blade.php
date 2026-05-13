@@ -7,7 +7,6 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- SheetJS for Excel Export -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -111,19 +110,28 @@
     <main class="flex-1 flex flex-col overflow-hidden">
         <!-- Toolbar -->
         <div class="px-8 py-4 flex justify-between items-center border-b-2 border-black shrink-0" style="border-color: var(--border-color);">
-            <div class="flex gap-2">
+            <div class="flex gap-2 items-center">
                 <button @click="addRow()" class="px-5 py-2 border-2 border-black font-bold text-[10px] uppercase hover:bg-black hover:text-white transition-all flex items-center gap-2" style="border-color: var(--border-color);">
                     + Baris
                 </button>
                 <button @click="addColumn()" class="px-5 py-2 border-2 border-black font-bold text-[10px] uppercase hover:bg-black hover:text-white transition-all flex items-center gap-2" style="border-color: var(--border-color);">
                     + Kolom
                 </button>
-                <div class="w-[2px] bg-black/10 mx-2"></div>
+                <div class="w-[2px] bg-black/10 mx-2 h-6"></div>
                 <button @click="createNewSheet()" class="px-5 py-2 border-2 border-black border-dashed font-bold text-[10px] uppercase hover:bg-black hover:text-white transition-all flex items-center gap-2" style="border-color: var(--border-color);">
                     + Sheet Baru
                 </button>
-                <div class="w-[2px] bg-black/10 mx-2"></div>
-                <!-- Export Excel Button -->
+                <div class="w-[2px] bg-black/10 mx-2 h-6"></div>
+                
+                <!-- Import Excel -->
+                <div class="relative group">
+                    <input type="file" @change="importExcel($event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".xlsx, .xls, .csv">
+                    <button class="px-5 py-2 border-2 border-blue-600 text-blue-600 font-bold text-[10px] uppercase group-hover:bg-blue-600 group-hover:text-white transition-all flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Import Excel
+                    </button>
+                </div>
+
                 <button @click="exportToExcel()" class="px-5 py-2 border-2 border-green-600 text-green-600 font-bold text-[10px] uppercase hover:bg-green-600 hover:text-white transition-all flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Export Excel
@@ -223,71 +231,30 @@
     </footer>
 
     <!-- Settings Modal -->
-    <div 
-        x-show="showSettings" 
-        class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 scale-95"
-        x-transition:enter-end="opacity-100 scale-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 scale-100"
-        x-transition:leave-end="opacity-0 scale-95"
-    >
+    <div x-show="showSettings" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
         <div class="bg-white border-4 border-black w-full max-w-md shadow-premium p-8 relative" @click.away="showSettings = false">
             <button @click="showSettings = false" class="absolute top-4 right-4 p-2 hover:bg-black hover:text-white transition-all border-2 border-black">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
-            
             <h2 class="font-display font-black text-2xl uppercase tracking-tighter mb-8 italic underline decoration-4 underline-offset-4">Theme Settings</h2>
-            
             <div class="grid grid-cols-2 gap-6">
-                <div class="flex flex-col gap-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Background Utama</label>
-                    <input type="color" x-model="theme.bgMain" @input="updateTheme()">
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Background Table</label>
-                    <input type="color" x-model="theme.bgSecondary" @input="updateTheme()">
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Teks</label>
-                    <input type="color" x-model="theme.textMain" @input="updateTheme()">
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Aksen (Header)</label>
-                    <input type="color" x-model="theme.accentColor" @input="updateTheme()">
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Teks Aksen</label>
-                    <input type="color" x-model="theme.accentText" @input="updateTheme()">
-                </div>
-                <div class="flex flex-col gap-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Garis (Border)</label>
-                    <input type="color" x-model="theme.borderColor" @input="updateTheme()">
-                </div>
+                <template x-for="(label, key) in {bgMain: 'BG Utama', bgSecondary: 'BG Table', textMain: 'Teks Utama', accentColor: 'Aksen', accentText: 'Teks Aksen', borderColor: 'Garis'}">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest opacity-60" x-text="label"></label>
+                        <input type="color" x-model="theme[key]" @input="updateTheme()">
+                    </div>
+                </template>
             </div>
-
             <div class="mt-10 pt-6 border-t-2 border-black flex gap-3">
-                <button @click="resetTheme()" class="flex-1 py-3 border-2 border-black font-bold text-xs uppercase hover:bg-red-500 hover:text-white transition-all">
-                    Reset Default
-                </button>
-                <button @click="showSettings = false" class="flex-1 py-3 bg-black text-white font-bold text-xs uppercase hover:bg-gray-800 transition-all">
-                    Tutup
-                </button>
+                <button @click="resetTheme()" class="flex-1 py-3 border-2 border-black font-bold text-xs uppercase hover:bg-red-500 hover:text-white transition-all">Reset</button>
+                <button @click="showSettings = false" class="flex-1 py-3 bg-black text-white font-bold text-xs uppercase hover:bg-gray-800 transition-all">Tutup</button>
             </div>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div 
-        x-show="toast.show" 
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 translate-y-10"
-        x-transition:enter-end="opacity-100 translate-y-0"
-        class="fixed bottom-20 right-8 z-[100]"
-    >
-        <div class="bg-black text-white px-6 py-3 border-2 border-black shadow-premium flex items-center gap-4" style="background-color: var(--accent-color); color: var(--accent-text); border-color: var(--border-color);">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-green-400"><polyline points="20 6 9 17 4 12"/></svg>
+    <div x-show="toast.show" class="fixed bottom-20 right-8 z-[100]">
+        <div class="bg-black text-white px-6 py-3 border-2 border-black shadow-premium flex items-center gap-4">
             <span class="font-bold text-[10px] uppercase tracking-wider" x-text="toast.message"></span>
         </div>
     </div>
@@ -302,200 +269,131 @@
                 hasChanges: false,
                 toast: { show: false, message: '' },
                 showSettings: false,
-                
                 theme: {
-                    bgMain: '#ffffff',
-                    bgSecondary: '#f9f9f9',
-                    textMain: '#000000',
-                    accentColor: '#000000',
-                    accentText: '#ffffff',
-                    borderColor: '#000000',
-                    shadowColor: '#000000'
+                    bgMain: '#ffffff', bgSecondary: '#f9f9f9', textMain: '#000000',
+                    accentColor: '#000000', accentText: '#ffffff', borderColor: '#000000', shadowColor: '#000000'
                 },
 
                 initData(data) {
                     this.sheets = data;
                     const savedTheme = localStorage.getItem('abiraja_theme');
-                    if (savedTheme) {
-                        this.theme = JSON.parse(savedTheme);
-                        this.updateTheme();
-                    }
+                    if (savedTheme) { this.theme = JSON.parse(savedTheme); this.updateTheme(); }
                 },
 
                 updateTheme() {
                     const root = document.documentElement;
-                    root.style.setProperty('--bg-main', this.theme.bgMain);
-                    root.style.setProperty('--bg-secondary', this.theme.bgSecondary);
-                    root.style.setProperty('--text-main', this.theme.textMain);
-                    root.style.setProperty('--accent-color', this.theme.accentColor);
-                    root.style.setProperty('--accent-text', this.theme.accentText);
-                    root.style.setProperty('--border-color', this.theme.borderColor);
+                    Object.keys(this.theme).forEach(key => {
+                        let cssVar = '--' + key.replace(/[A-Z]/g, m => "-" + m.toLowerCase());
+                        root.style.setProperty(cssVar, this.theme[key]);
+                    });
                     root.style.setProperty('--shadow-color', this.theme.borderColor);
                     localStorage.setItem('abiraja_theme', JSON.stringify(this.theme));
                 },
 
                 resetTheme() {
-                    this.theme = {
-                        bgMain: '#ffffff',
-                        bgSecondary: '#f9f9f9',
-                        textMain: '#000000',
-                        accentColor: '#000000',
-                        accentText: '#ffffff',
-                        borderColor: '#000000',
-                        shadowColor: '#000000'
-                    };
+                    this.theme = { bgMain: '#ffffff', bgSecondary: '#f9f9f9', textMain: '#000000', accentColor: '#000000', accentText: '#ffffff', borderColor: '#000000', shadowColor: '#000000' };
                     this.updateTheme();
-                    this.showToast('Tema direset');
                 },
 
-                currentSheet() {
-                    return this.sheets[this.activeSheetIndex] || { data: { headers: [], rows: [] } };
-                },
+                currentSheet() { return this.sheets[this.activeSheetIndex] || { data: { headers: [], rows: [] } }; },
 
                 filteredRows() {
                     if (!this.currentSheet().data) return [];
                     if (!this.search) return this.currentSheet().data.rows;
-                    return this.currentSheet().data.rows.filter(row => {
-                        return Object.values(row).some(val => 
-                            String(val).toLowerCase().includes(this.search.toLowerCase())
-                        );
-                    });
+                    return this.currentSheet().data.rows.filter(row => Object.values(row).some(val => String(val).toLowerCase().includes(this.search.toLowerCase())));
                 },
 
                 addRow() {
-                    let newRow = {};
-                    this.currentSheet().data.headers.forEach(h => {
-                        newRow[h] = '';
-                    });
-                    this.currentSheet().data.rows.push(newRow);
-                    this.hasChanges = true;
+                    let newRow = {}; this.currentSheet().data.headers.forEach(h => newRow[h] = '');
+                    this.currentSheet().data.rows.push(newRow); this.hasChanges = true;
                 },
 
                 deleteRow(index) {
-                    if(confirm('Hapus baris data ini?')) {
-                        this.currentSheet().data.rows.splice(index, 1);
-                        this.hasChanges = true;
-                    }
+                    if(confirm('Hapus baris?')) { this.currentSheet().data.rows.splice(index, 1); this.hasChanges = true; }
                 },
 
                 addColumn() {
-                    let colName = prompt("Masukkan Nama Kolom Baru:");
-                    if (colName) {
-                        if (this.currentSheet().data.headers.includes(colName)) {
-                            return alert("Nama kolom sudah ada!");
-                        }
+                    let colName = prompt("Nama Kolom:");
+                    if (colName && !this.currentSheet().data.headers.includes(colName)) {
                         this.currentSheet().data.headers.push(colName);
-                        this.currentSheet().data.rows.forEach(row => {
-                            row[colName] = '';
-                        });
+                        this.currentSheet().data.rows.forEach(row => row[colName] = '');
                         this.hasChanges = true;
                     }
                 },
 
                 removeColumn(hIndex) {
-                    if(confirm('Hapus kolom ini beserta semua datanya?')) {
+                    if(confirm('Hapus kolom?')) {
                         let colName = this.currentSheet().data.headers[hIndex];
                         this.currentSheet().data.headers.splice(hIndex, 1);
-                        this.currentSheet().data.rows.forEach(row => {
-                            delete row[colName];
-                        });
+                        this.currentSheet().data.rows.forEach(row => delete row[colName]);
                         this.hasChanges = true;
                     }
                 },
 
                 async createNewSheet() {
-                    let name = prompt("Nama Sheet Baru:");
-                    if (!name) return;
-
-                    const response = await fetch('/admin/sheets', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ name: name, headers: ['Nama', 'Detail'] })
-                    });
+                    let name = prompt("Nama Sheet:"); if (!name) return;
+                    const response = await fetch('/admin/sheets', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name: name }) });
                     const result = await response.json();
-                    if (result.success) {
-                        this.sheets.push(result.sheet);
-                        this.activeSheetIndex = this.sheets.length - 1;
-                        this.showToast('Sheet baru dibuat!');
-                    }
+                    if (result.success) { this.sheets.push(result.sheet); this.activeSheetIndex = this.sheets.length - 1; this.showToast('Sheet baru!'); }
                 },
 
                 async deleteSheet(id, index) {
-                    if(!confirm(`Hapus sheet "${this.sheets[index].name}" permanen?`)) return;
-
-                    const response = await fetch(`/admin/sheets/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        }
-                    });
-                    const result = await response.json();
-                    if (result.success) {
+                    if(!confirm('Hapus sheet?')) return;
+                    const response = await fetch(`/admin/sheets/${id}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+                    if ((await response.json()).success) {
                         this.sheets.splice(index, 1);
-                        if (this.activeSheetIndex >= this.sheets.length) {
-                            this.activeSheetIndex = Math.max(0, this.sheets.length - 1);
-                        }
-                        this.showToast('Sheet dihapus');
+                        this.activeSheetIndex = Math.max(0, Math.min(this.activeSheetIndex, this.sheets.length - 1));
                     }
                 },
 
                 async saveCurrentSheet() {
                     this.saving = true;
-                    const sheet = this.currentSheet();
                     try {
-                        const response = await fetch(`/admin/sheets/${sheet.id}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({ data: sheet.data })
-                        });
-                        const result = await response.json();
-                        if (result.success) {
-                            this.showToast('Data berhasil disimpan');
-                            this.hasChanges = false;
-                        }
-                    } catch (e) {
-                        alert('Gagal menyimpan data');
-                    } finally {
-                        this.saving = false;
-                    }
+                        await fetch(`/admin/sheets/${this.currentSheet().id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ data: this.currentSheet().data }) });
+                        this.showToast('Tersimpan!'); this.hasChanges = false;
+                    } finally { this.saving = false; }
                 },
 
                 exportToExcel() {
                     const sheet = this.currentSheet();
-                    const headers = sheet.data.headers;
-                    const rows = sheet.data.rows;
-
-                    // Prepare data for SheetJS (Array of Arrays)
-                    const data = [headers];
-                    rows.forEach(row => {
-                        data.push(headers.map(h => row[h] || ''));
-                    });
-
-                    // Create Worksheet
-                    const ws = XLSX.utils.aoa_to_sheet(data);
-                    
-                    // Create Workbook
+                    const ws = XLSX.utils.json_to_sheet(sheet.data.rows, { header: sheet.data.headers });
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, sheet.name);
-
-                    // Generate file and trigger download
-                    const fileName = `${sheet.name}_${new Date().toISOString().slice(0,10)}.xlsx`;
-                    XLSX.writeFile(wb, fileName);
-                    
-                    this.showToast('Excel berhasil diexport!');
+                    XLSX.writeFile(wb, `${sheet.name}.xlsx`);
                 },
 
-                showToast(msg) {
-                    this.toast.message = msg;
-                    this.toast.show = true;
-                    setTimeout(() => { this.toast.show = false; }, 3000);
-                }
+                importExcel(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[firstSheetName];
+                        
+                        // Get JSON with headers
+                        const json = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+                        
+                        if (json.length > 0) {
+                            // Extract headers from first row
+                            const headers = Object.keys(json[0]);
+                            
+                            // Apply to current sheet
+                            this.currentSheet().data.headers = headers;
+                            this.currentSheet().data.rows = json;
+                            this.hasChanges = true;
+                            this.showToast('Excel Berhasil di-Import!');
+                            
+                            // Reset input
+                            event.target.value = "";
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                },
+
+                showToast(msg) { this.toast.message = msg; this.toast.show = true; setTimeout(() => this.toast.show = false, 3000); }
             }
         }
     </script>
