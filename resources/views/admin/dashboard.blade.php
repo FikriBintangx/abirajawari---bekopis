@@ -7,6 +7,8 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -64,7 +66,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Input color custom styling */
         input[type="color"] {
             -webkit-appearance: none;
             border: 2px solid var(--border-color);
@@ -90,8 +91,7 @@
             </div>
         </div>
         <div class="flex items-center gap-4 text-xs font-bold tracking-widest uppercase">
-            <!-- Settings Toggle -->
-            <button @click="showSettings = true" class="p-3 border-2 border-black hover:bg-black hover:text-white transition-all" style="border-color: var(--border-color);">
+            <button @click="showSettings = true" title="Settings" class="p-3 border-2 border-black hover:bg-black hover:text-white transition-all" style="border-color: var(--border-color);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
 
@@ -122,6 +122,12 @@
                 <button @click="createNewSheet()" class="px-5 py-2 border-2 border-black border-dashed font-bold text-[10px] uppercase hover:bg-black hover:text-white transition-all flex items-center gap-2" style="border-color: var(--border-color);">
                     + Sheet Baru
                 </button>
+                <div class="w-[2px] bg-black/10 mx-2"></div>
+                <!-- Export Excel Button -->
+                <button @click="exportToExcel()" class="px-5 py-2 border-2 border-green-600 text-green-600 font-bold text-[10px] uppercase hover:bg-green-600 hover:text-white transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export Excel
+                </button>
             </div>
             <div class="relative">
                 <input type="text" x-model="search" placeholder="Cari data..." class="pl-9 pr-4 py-2 border-2 border-black text-[10px] font-bold outline-none focus:bg-black focus:text-white transition-all w-56" style="border-color: var(--border-color);">
@@ -132,7 +138,7 @@
         <!-- Table Container -->
         <div class="flex-1 overflow-auto p-6 fade-in" style="background-color: var(--bg-secondary);">
             <div class="bg-white border-4 border-black shadow-premium" style="border-color: var(--border-color);">
-                <table class="w-full text-left border-collapse min-w-max">
+                <table id="main-excel-table" class="w-full text-left border-collapse min-w-max">
                     <thead class="sticky top-0 z-10">
                         <tr class="bg-black text-white" style="background-color: var(--accent-color); color: var(--accent-text);">
                             <th class="px-4 py-3 w-14 text-center border-r border-white/20 text-[9px] font-black">#</th>
@@ -146,12 +152,12 @@
                                     </div>
                                 </th>
                             </template>
-                            <th class="px-4 py-3 w-16 text-center font-black text-[9px]">AKSI</th>
+                            <th class="px-4 py-3 w-16 text-center font-black text-[9px] no-export">AKSI</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-black" style="border-color: var(--border-color);">
                         <template x-for="(row, rIndex) in filteredRows()" :key="rIndex">
-                            <tr class="hover:bg-black/[0.02] group transition-all" :style="`&:hover { background-color: var(--row-hover); }`">
+                            <tr class="hover:bg-black/[0.02] group transition-all">
                                 <td class="px-3 py-3 text-center bg-black/5 font-black text-[9px]" style="background-color: rgba(0,0,0,0.05); color: var(--text-main);" x-text="rIndex + 1"></td>
                                 <template x-for="(header, hIndex) in currentSheet().data.headers" :key="hIndex">
                                     <td class="px-0 py-0 border-r" style="border-color: var(--border-color);">
@@ -164,7 +170,7 @@
                                         >
                                     </td>
                                 </template>
-                                <td class="px-3 py-3 text-center">
+                                <td class="px-3 py-3 text-center no-export">
                                     <button @click="deleteRow(rIndex)" class="text-black/20 hover:text-red-600 transition-all opacity-0 group-hover:opacity-100 scale-110">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                                     </button>
@@ -297,7 +303,6 @@
                 toast: { show: false, message: '' },
                 showSettings: false,
                 
-                // Theme settings
                 theme: {
                     bgMain: '#ffffff',
                     bgSecondary: '#f9f9f9',
@@ -310,8 +315,6 @@
 
                 initData(data) {
                     this.sheets = data;
-                    
-                    // Load saved theme from localStorage
                     const savedTheme = localStorage.getItem('abiraja_theme');
                     if (savedTheme) {
                         this.theme = JSON.parse(savedTheme);
@@ -328,8 +331,6 @@
                     root.style.setProperty('--accent-text', this.theme.accentText);
                     root.style.setProperty('--border-color', this.theme.borderColor);
                     root.style.setProperty('--shadow-color', this.theme.borderColor);
-                    
-                    // Save to localStorage
                     localStorage.setItem('abiraja_theme', JSON.stringify(this.theme));
                 },
 
@@ -344,7 +345,7 @@
                         shadowColor: '#000000'
                     };
                     this.updateTheme();
-                    this.showToast('Tema direset ke default');
+                    this.showToast('Tema direset');
                 },
 
                 currentSheet() {
@@ -463,6 +464,31 @@
                     } finally {
                         this.saving = false;
                     }
+                },
+
+                exportToExcel() {
+                    const sheet = this.currentSheet();
+                    const headers = sheet.data.headers;
+                    const rows = sheet.data.rows;
+
+                    // Prepare data for SheetJS (Array of Arrays)
+                    const data = [headers];
+                    rows.forEach(row => {
+                        data.push(headers.map(h => row[h] || ''));
+                    });
+
+                    // Create Worksheet
+                    const ws = XLSX.utils.aoa_to_sheet(data);
+                    
+                    // Create Workbook
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, sheet.name);
+
+                    // Generate file and trigger download
+                    const fileName = `${sheet.name}_${new Date().toISOString().slice(0,10)}.xlsx`;
+                    XLSX.writeFile(wb, fileName);
+                    
+                    this.showToast('Excel berhasil diexport!');
                 },
 
                 showToast(msg) {
