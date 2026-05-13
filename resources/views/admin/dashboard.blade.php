@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* [COLOR SETTINGS] - Silakan ganti warna di sini secara manual */
         :root {
             --bg-main: #ffffff;
             --bg-secondary: #f9f9f9;
@@ -26,6 +25,7 @@
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main);
             color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .font-display { font-family: 'Outfit', sans-serif; }
@@ -53,7 +53,6 @@
             transform: translate(0, 0);
         }
 
-        /* Scrollbar kustom untuk tab bawah */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -64,6 +63,19 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Input color custom styling */
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: 2px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-hidden" x-data="excelApp()" x-init="initData({{ $sheets }})" x-cloak>
@@ -77,7 +89,12 @@
                 <p class="text-[9px] font-bold tracking-[0.3em] uppercase opacity-40 mt-1">Control Center</p>
             </div>
         </div>
-        <div class="flex items-center gap-6 text-xs font-bold tracking-widest uppercase">
+        <div class="flex items-center gap-4 text-xs font-bold tracking-widest uppercase">
+            <!-- Settings Toggle -->
+            <button @click="showSettings = true" class="p-3 border-2 border-black hover:bg-black hover:text-white transition-all" style="border-color: var(--border-color);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+
             <button @click="saveCurrentSheet()" class="btn-black px-5 py-2.5 border-2 border-black flex items-center gap-3 text-[10px]" style="background-color: var(--accent-color); color: var(--accent-text); border-color: var(--border-color);">
                 <template x-if="!saving">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
@@ -134,7 +151,7 @@
                     </thead>
                     <tbody class="divide-y divide-black" style="border-color: var(--border-color);">
                         <template x-for="(row, rIndex) in filteredRows()" :key="rIndex">
-                            <tr class="hover:bg-black/[0.02] group transition-all" style="&:hover { background-color: var(--row-hover); }">
+                            <tr class="hover:bg-black/[0.02] group transition-all" :style="`&:hover { background-color: var(--row-hover); }`">
                                 <td class="px-3 py-3 text-center bg-black/5 font-black text-[9px]" style="background-color: rgba(0,0,0,0.05); color: var(--text-main);" x-text="rIndex + 1"></td>
                                 <template x-for="(header, hIndex) in currentSheet().data.headers" :key="hIndex">
                                     <td class="px-0 py-0 border-r" style="border-color: var(--border-color);">
@@ -143,7 +160,7 @@
                                             x-model="row[header]" 
                                             @change="hasChanges = true"
                                             class="w-full h-full px-5 py-3 text-xs font-medium bg-transparent outline-none focus:bg-black focus:text-white transition-all"
-                                            style="color: var(--text-main); &:focus { background-color: var(--accent-color); color: var(--accent-text); }"
+                                            style="color: var(--text-main);"
                                         >
                                     </td>
                                 </template>
@@ -187,7 +204,6 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" :class="activeSheetIndex === index ? 'opacity-100' : 'opacity-40'"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
                         <span class="text-[10px] font-black uppercase tracking-widest whitespace-nowrap" x-text="sheet.name"></span>
                         
-                        <!-- Delete Sheet Button -->
                         <div @click.stop="deleteSheet(sheet.id, index)" class="ml-2 p-1 hover:bg-red-500 rounded text-red-500 hover:text-white transition-all" x-show="sheets.length > 1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                         </div>
@@ -199,6 +215,62 @@
             <p class="text-[9px] font-black uppercase tracking-tighter opacity-30 whitespace-nowrap">ABIRAJAVARI &copy; 2026</p>
         </div>
     </footer>
+
+    <!-- Settings Modal -->
+    <div 
+        x-show="showSettings" 
+        class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+    >
+        <div class="bg-white border-4 border-black w-full max-w-md shadow-premium p-8 relative" @click.away="showSettings = false">
+            <button @click="showSettings = false" class="absolute top-4 right-4 p-2 hover:bg-black hover:text-white transition-all border-2 border-black">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            
+            <h2 class="font-display font-black text-2xl uppercase tracking-tighter mb-8 italic underline decoration-4 underline-offset-4">Theme Settings</h2>
+            
+            <div class="grid grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Background Utama</label>
+                    <input type="color" x-model="theme.bgMain" @input="updateTheme()">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Background Table</label>
+                    <input type="color" x-model="theme.bgSecondary" @input="updateTheme()">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Teks</label>
+                    <input type="color" x-model="theme.textMain" @input="updateTheme()">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Aksen (Header)</label>
+                    <input type="color" x-model="theme.accentColor" @input="updateTheme()">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Teks Aksen</label>
+                    <input type="color" x-model="theme.accentText" @input="updateTheme()">
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest opacity-60">Warna Garis (Border)</label>
+                    <input type="color" x-model="theme.borderColor" @input="updateTheme()">
+                </div>
+            </div>
+
+            <div class="mt-10 pt-6 border-t-2 border-black flex gap-3">
+                <button @click="resetTheme()" class="flex-1 py-3 border-2 border-black font-bold text-xs uppercase hover:bg-red-500 hover:text-white transition-all">
+                    Reset Default
+                </button>
+                <button @click="showSettings = false" class="flex-1 py-3 bg-black text-white font-bold text-xs uppercase hover:bg-gray-800 transition-all">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Notification -->
     <div 
@@ -223,9 +295,56 @@
                 saving: false,
                 hasChanges: false,
                 toast: { show: false, message: '' },
+                showSettings: false,
+                
+                // Theme settings
+                theme: {
+                    bgMain: '#ffffff',
+                    bgSecondary: '#f9f9f9',
+                    textMain: '#000000',
+                    accentColor: '#000000',
+                    accentText: '#ffffff',
+                    borderColor: '#000000',
+                    shadowColor: '#000000'
+                },
 
                 initData(data) {
                     this.sheets = data;
+                    
+                    // Load saved theme from localStorage
+                    const savedTheme = localStorage.getItem('abiraja_theme');
+                    if (savedTheme) {
+                        this.theme = JSON.parse(savedTheme);
+                        this.updateTheme();
+                    }
+                },
+
+                updateTheme() {
+                    const root = document.documentElement;
+                    root.style.setProperty('--bg-main', this.theme.bgMain);
+                    root.style.setProperty('--bg-secondary', this.theme.bgSecondary);
+                    root.style.setProperty('--text-main', this.theme.textMain);
+                    root.style.setProperty('--accent-color', this.theme.accentColor);
+                    root.style.setProperty('--accent-text', this.theme.accentText);
+                    root.style.setProperty('--border-color', this.theme.borderColor);
+                    root.style.setProperty('--shadow-color', this.theme.borderColor);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('abiraja_theme', JSON.stringify(this.theme));
+                },
+
+                resetTheme() {
+                    this.theme = {
+                        bgMain: '#ffffff',
+                        bgSecondary: '#f9f9f9',
+                        textMain: '#000000',
+                        accentColor: '#000000',
+                        accentText: '#ffffff',
+                        borderColor: '#000000',
+                        shadowColor: '#000000'
+                    };
+                    this.updateTheme();
+                    this.showToast('Tema direset ke default');
                 },
 
                 currentSheet() {
