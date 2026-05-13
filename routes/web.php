@@ -9,4 +9,5 @@ Route::get('/', function () {
 Route::get('/admin', [ExcelController::class, 'index']);
 Route::post('/admin/sheets', [ExcelController::class, 'store']);
 Route::put('/admin/sheets/{id}', [ExcelController::class, 'update']);
+Route::patch('/admin/sheets/{id}/rename', [ExcelController::class, 'rename']);
 Route::delete('/admin/sheets/{id}', [ExcelController::class, 'destroy']);

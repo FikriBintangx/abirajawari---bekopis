@@ -50,6 +50,16 @@ class ExcelController extends Controller
         return response()->json(['success' => true, 'sheet' => $sheet]);
     }
 
+    public function rename(Request $request, $id)
+    {
+        $sheet = ExcelSheet::findOrFail($id);
+        $sheet->update([
+            'name' => $request->input('name')
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
     public function destroy($id)
     {
         $sheet = ExcelSheet::findOrFail($id);

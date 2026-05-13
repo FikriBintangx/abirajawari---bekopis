@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abi Raja Wari | Control Center</title>
+    <title>Abi Raja Wari | Backoffice</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -18,7 +18,6 @@
             --accent-color: #000000;
             --accent-text: #ffffff;
             --border-color: #000000;
-            --row-hover: rgba(0, 0, 0, 0.03);
             --shadow-color: #000000;
         }
 
@@ -29,172 +28,163 @@
         }
         
         .font-display { font-family: 'Outfit', sans-serif; }
-        .excel-table th, .excel-table td { border: 1px solid var(--border-color); }
         .shadow-premium { box-shadow: 8px 8px 0px 0px var(--shadow-color); }
         .btn-black { background: var(--accent-color); color: var(--accent-text); transition: all 0.2s ease; }
-        .btn-black:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.2); }
+        .btn-black:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.1); }
+        
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         [x-cloak] { display: none !important; }
-        .fade-in { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        input[type="color"] {
-            -webkit-appearance: none;
-            border: 2px solid var(--border-color);
-            width: 30px; height: 30px; cursor: pointer; background: none; padding: 0;
+        @media (max-width: 768px) {
+            .mobile-stack { flex-direction: column; gap: 1rem; }
+            .mobile-hide { display: none; }
+            .mobile-full { width: 100%; }
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-hidden" x-data="excelApp()" x-init="initData({{ $sheets }})" x-cloak>
     
     <!-- Top Header -->
-    <header class="border-b-4 border-black px-8 py-4 flex justify-between items-center bg-white sticky top-0 z-50 shrink-0" style="border-color: var(--border-color); background-color: var(--bg-main);">
-        <div class="flex items-center gap-6">
-            <div class="w-10 h-10 bg-black text-white flex items-center justify-center font-bold text-xl border-2 border-black rotate-3" style="background-color: var(--accent-color); color: var(--accent-text); border-color: var(--border-color);">A</div>
+    <header class="border-b-4 border-black px-6 md:px-8 py-4 flex justify-between items-center bg-white sticky top-0 z-50 shrink-0" style="border-color: var(--border-color); background-color: var(--bg-main);">
+        <div class="flex items-center gap-4 md:gap-6">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-black text-white flex items-center justify-center font-bold text-lg md:text-xl border-2 border-black rotate-3" style="background-color: var(--accent-color); color: var(--accent-text);">A</div>
             <div>
-                <h1 class="font-display font-bold tracking-tighter text-2xl uppercase leading-none" style="color: var(--text-main);">Abi Raja Wari</h1>
-                <p class="text-[9px] font-bold tracking-[0.3em] uppercase opacity-40 mt-1">Control Center</p>
+                <h1 class="font-display font-bold tracking-tighter text-lg md:text-2xl uppercase leading-none">Abi Raja Wari</h1>
+                <p class="text-[8px] md:text-[9px] font-bold tracking-[0.3em] uppercase opacity-40 mt-1">Backoffice</p>
             </div>
         </div>
-        <div class="flex items-center gap-4 text-xs font-bold tracking-widest uppercase">
-            <button @click="showSettings = true" title="Settings" class="p-3 border-2 border-black hover:bg-black hover:text-white transition-all" style="border-color: var(--border-color);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div class="flex items-center gap-2 md:gap-4">
+            <button @click="showSettings = true" class="p-2 md:p-3 border-2 border-black hover:bg-black hover:text-white transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
-
-            <button @click="saveCurrentSheet()" class="btn-black px-5 py-2.5 border-2 border-black flex items-center gap-3 text-[10px]" style="border-color: var(--border-color);">
-                <template x-if="!saving">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                </template>
-                <template x-if="saving">
-                    <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                </template>
-                <span x-text="saving ? 'Menyimpan...' : 'Simpan Data'"></span>
+            <button @click="saveCurrentSheet()" class="btn-black px-4 md:px-6 py-2 md:py-2.5 border-2 border-black flex items-center gap-2 text-[10px] font-black uppercase">
+                <span x-text="saving ? '...' : 'SIMPAN'"></span>
             </button>
         </div>
     </header>
 
     <!-- Toolbar -->
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <div class="px-8 py-4 flex justify-between items-center border-b-2 border-black shrink-0" style="border-color: var(--border-color);">
-            <div class="flex gap-2 items-center">
-                <button @click="addRow()" class="px-4 py-2 border-2 border-black font-bold text-[9px] uppercase hover:bg-black hover:text-white transition-all" style="border-color: var(--border-color);">+ Baris</button>
-                <button @click="addColumn()" class="px-4 py-2 border-2 border-black font-bold text-[9px] uppercase hover:bg-black hover:text-white transition-all" style="border-color: var(--border-color);">+ Kolom</button>
-                <button @click="createNewSheet()" class="px-4 py-2 border-2 border-black border-dashed font-bold text-[9px] uppercase hover:bg-black hover:text-white transition-all" style="border-color: var(--border-color);">+ Sheet</button>
-                
-                <div class="w-[1px] bg-black/10 mx-2 h-6"></div>
-                
-                <div class="relative group">
-                    <input type="file" @change="importExcel($event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".xlsx, .xls, .csv">
-                    <button class="px-4 py-2 border-2 border-blue-600 text-blue-600 font-bold text-[9px] uppercase group-hover:bg-blue-600 group-hover:text-white transition-all">Import</button>
-                </div>
-                <button @click="exportToExcel()" class="px-4 py-2 border-2 border-green-600 text-green-600 font-bold text-[9px] uppercase hover:bg-green-600 hover:text-white transition-all">Export</button>
+    <div class="px-6 md:px-8 py-3 md:py-4 flex flex-col md:flex-row justify-between items-center border-b-2 border-black gap-4 shrink-0">
+        <div class="flex gap-2 items-center mobile-full overflow-x-auto hide-scrollbar pb-1">
+            <button @click="addRow()" class="px-4 py-2 border-2 border-black font-black text-[9px] uppercase hover:bg-black hover:text-white transition-all">+ Baris</button>
+            <button @click="addColumn()" class="px-4 py-2 border-2 border-black font-black text-[9px] uppercase hover:bg-black hover:text-white transition-all">+ Kolom</button>
+            <button @click="createNewSheet()" class="px-4 py-2 border-2 border-black border-dashed font-black text-[9px] uppercase hover:bg-black hover:text-white transition-all">+ Sheet</button>
+            <div class="w-[1px] bg-black/10 mx-2 h-4"></div>
+            <div class="relative group">
+                <input type="file" @change="importExcel($event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".xlsx, .xls, .csv">
+                <button class="px-4 py-2 border-2 border-blue-600 text-blue-600 font-black text-[9px] uppercase group-hover:bg-blue-600 group-hover:text-white transition-all">Import</button>
             </div>
-
-            <!-- Search and Pagination Info -->
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2" x-show="totalRows() > perPage">
-                    <button @click="prevPage()" :disabled="page === 1" class="p-1 border border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-                    <span class="text-[9px] font-black uppercase">Page <span x-text="page"></span> / <span x-text="totalPages()"></span></span>
-                    <button @click="nextPage()" :disabled="page >= totalPages()" class="p-1 border border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-                </div>
-                <div class="relative">
-                    <input type="text" x-model="search" placeholder="Cari..." class="pl-8 pr-4 py-2 border-2 border-black text-[10px] font-bold outline-none focus:bg-black focus:text-white transition-all w-48" style="border-color: var(--border-color);">
-                    <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 opacity-30" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                </div>
-            </div>
+            <button @click="exportToExcel()" class="px-4 py-2 border-2 border-green-600 text-green-600 font-black text-[9px] uppercase hover:bg-green-600 hover:text-white transition-all">Export</button>
         </div>
 
-        <!-- Main Workspace -->
-        <div class="flex-1 overflow-auto p-6" style="background-color: var(--bg-secondary);">
-            <div class="bg-white border-4 border-black shadow-premium" style="border-color: var(--border-color);">
-                <table class="w-full text-left border-collapse min-w-max">
-                    <thead class="sticky top-0 z-10">
-                        <tr class="bg-black text-white" style="background-color: var(--accent-color); color: var(--accent-text);">
-                            <th class="px-4 py-3 w-14 text-center border-r border-white/20 text-[9px] font-black">#</th>
-                            <template x-for="(header, hIndex) in currentSheet().data.headers" :key="hIndex">
-                                <th class="px-5 py-3 text-[10px] uppercase tracking-widest font-black border-r border-white/20 relative group">
-                                    <div class="flex justify-between items-center">
-                                        <span x-text="header"></span>
-                                        <button @click="removeColumn(hIndex)" class="opacity-0 group-hover:opacity-100 text-red-500 hover:scale-125 transition-all">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                                        </button>
-                                    </div>
-                                </th>
-                            </template>
-                            <th class="px-4 py-3 w-16 text-center font-black text-[9px]">AKSI</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-black" style="border-color: var(--border-color);">
-                        <template x-for="(row, rIndex) in paginatedRows()" :key="rIndex">
-                            <tr class="hover:bg-black/[0.02] group transition-all">
-                                <td class="px-3 py-3 text-center bg-black/5 font-black text-[9px]" x-text="(page - 1) * perPage + rIndex + 1"></td>
-                                <template x-for="(header, hIndex) in currentSheet().data.headers" :key="hIndex">
-                                    <td class="px-0 py-0 border-r" style="border-color: var(--border-color);">
-                                        <input type="text" x-model="row[header]" @change="hasChanges = true" class="w-full h-full px-5 py-3 text-xs font-medium bg-transparent outline-none focus:bg-black focus:text-white transition-all">
-                                    </td>
-                                </template>
-                                <td class="px-3 py-3 text-center">
-                                    <button @click="deleteRow((page - 1) * perPage + rIndex)" class="text-black/20 hover:text-red-600 transition-all opacity-0 group-hover:opacity-100 scale-110">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                                    </button>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
+        <div class="flex items-center gap-4 mobile-full justify-between">
+            <div class="flex items-center gap-2">
+                <button @click="prevPage()" :disabled="page === 1" class="p-1.5 border-2 border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <span class="text-[9px] font-black uppercase">Pg <span x-text="page"></span></span>
+                <button @click="nextPage()" :disabled="page >= totalPages()" class="p-1.5 border-2 border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg></button>
             </div>
-        </div>
-    </main>
-
-    <!-- Footer Tabs -->
-    <footer class="border-t-4 border-black bg-white flex items-center shrink-0 h-12" style="border-color: var(--border-color); background-color: var(--bg-main);">
-        <div class="flex flex-1 overflow-x-auto hide-scrollbar scroll-smooth h-full">
-            <template x-for="(sheet, index) in sheets" :key="sheet.id">
-                <button @click="activeSheetIndex = index; page = 1" :class="activeSheetIndex === index ? 'bg-black text-white px-8' : 'hover:bg-black/5 px-6'" class="h-full border-r-2 border-black flex items-center gap-2 transition-all">
-                    <span class="text-[9px] font-black uppercase tracking-widest whitespace-nowrap" x-text="sheet.name"></span>
-                    <div @click.stop="deleteSheet(sheet.id, index)" class="p-1 hover:bg-red-500 rounded text-red-500 hover:text-white" x-show="sheets.length > 1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    </div>
-                </button>
-            </template>
-        </div>
-    </footer>
-
-    <!-- Settings Modal -->
-    <div x-show="showSettings" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-        <div class="bg-white border-4 border-black w-full max-w-md shadow-premium p-8 relative" @click.away="showSettings = false">
-            <h2 class="font-display font-black text-xl uppercase mb-6 italic underline decoration-4">Settings</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <template x-for="(label, key) in {bgMain: 'BG Utama', bgSecondary: 'BG Table', textMain: 'Teks', accentColor: 'Aksen', accentText: 'Teks Aksen', borderColor: 'Garis'}">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-[9px] font-black uppercase opacity-60" x-text="label"></label>
-                        <input type="color" x-model="theme[key]" @input="updateTheme()">
-                    </div>
-                </template>
-            </div>
-            <div class="mt-8 pt-4 border-t-2 border-black flex gap-2">
-                <button @click="resetTheme()" class="flex-1 py-2 border-2 border-black font-bold text-[10px] uppercase">Reset</button>
-                <button @click="showSettings = false" class="flex-1 py-2 bg-black text-white font-bold text-[10px] uppercase">Tutup</button>
+            <div class="relative flex-1 md:w-48">
+                <input type="text" x-model="search" placeholder="Cari..." class="w-full pl-8 pr-4 py-2 border-2 border-black text-[10px] font-bold outline-none focus:bg-black focus:text-white">
+                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 opacity-30" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div x-show="toast.show" class="fixed bottom-20 right-8 z-[100]">
-        <div class="bg-black text-white px-6 py-3 border-2 border-black shadow-premium font-bold text-[10px] uppercase" x-text="toast.message"></div>
+    <!-- Main Workspace -->
+    <div class="flex-1 overflow-auto p-4 md:p-6" style="background-color: var(--bg-secondary);">
+        <div class="bg-white border-4 border-black shadow-premium overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-max">
+                <thead>
+                    <tr class="bg-black text-white" style="background-color: var(--accent-color); color: var(--accent-text);">
+                        <th class="px-4 py-3 w-14 text-center border-r border-white/20 text-[9px] font-black">#</th>
+                        <template x-for="(header, hIndex) in currentSheet().data.headers" :key="hIndex">
+                            <th class="px-5 py-3 text-[10px] uppercase tracking-widest font-black border-r border-white/20 relative group">
+                                <div class="flex justify-between items-center gap-2">
+                                    <span x-text="header"></span>
+                                    <button @click="removeColumn(hIndex)" class="opacity-0 group-hover:opacity-100 text-red-500 hover:scale-125 transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    </button>
+                                </div>
+                            </th>
+                        </template>
+                        <th class="px-4 py-3 w-16 text-center font-black text-[9px]">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-black">
+                    <template x-for="(row, rIndex) in paginatedRows()" :key="rIndex">
+                        <tr class="hover:bg-black/[0.02] group transition-all">
+                            <td class="px-3 py-3 text-center bg-black/5 font-black text-[9px]" x-text="(page - 1) * perPage + rIndex + 1"></td>
+                            <template x-for="(header, hIndex) in currentSheet().data.headers" :key="hIndex">
+                                <td class="px-0 py-0 border-r" style="border-color: var(--border-color);">
+                                    <input type="text" x-model="row[header]" @change="hasChanges = true" class="w-full h-full px-5 py-3 text-xs font-medium bg-transparent outline-none focus:bg-black focus:text-white transition-all">
+                                </td>
+                            </template>
+                            <td class="px-3 py-3 text-center">
+                                <button @click="deleteRow((page - 1) * perPage + rIndex)" class="text-black/10 hover:text-red-600 transition-all opacity-0 group-hover:opacity-100 scale-110">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer Tabs -->
+    <footer class="border-t-4 border-black bg-white flex items-center shrink-0 h-14 overflow-hidden" style="border-color: var(--border-color); background-color: var(--bg-main);">
+        <div class="flex flex-1 overflow-x-auto hide-scrollbar h-full items-center">
+            <template x-for="(sheet, index) in sheets" :key="sheet.id">
+                <div class="h-full border-r-2 border-black flex items-center shrink-0" :class="activeSheetIndex === index ? 'bg-black text-white' : 'hover:bg-black/5'">
+                    <button @click="activeSheetIndex = index; page = 1" class="h-full px-6 flex items-center gap-3 transition-all relative">
+                        <span @dblclick="renameSheet(sheet.id, index)" class="text-[10px] font-black uppercase tracking-widest whitespace-nowrap cursor-edit" x-text="sheet.name" title="Double-click to rename"></span>
+                    </button>
+                    <button @click="deleteSheet(sheet.id, index)" class="pr-4 py-4 text-red-500 hover:scale-125 transition-all" x-show="sheets.length > 1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+            </template>
+        </div>
+        <div class="px-6 border-l-2 border-black h-full hidden md:flex items-center bg-black/5">
+            <p class="text-[9px] font-black uppercase tracking-tighter opacity-30">ABIRAJAVARI &copy; 2026</p>
+        </div>
+    </footer>
+
+    <!-- Modals (Settings) -->
+    <div x-show="showSettings" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm" x-transition>
+        <div class="bg-white border-4 border-black w-full max-w-sm shadow-premium p-8" @click.away="showSettings = false">
+            <h2 class="font-display font-black text-xl uppercase mb-6 italic underline decoration-4 underline-offset-4">Theme Settings</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <template x-for="(label, key) in {bgMain: 'Latar', bgSecondary: 'Tabel', textMain: 'Teks', accentColor: 'Aksen', accentText: 'Teks Aksen', borderColor: 'Garis'}">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[9px] font-black uppercase opacity-60" x-text="label"></label>
+                        <input type="color" x-model="theme[key]" @input="updateTheme()" class="w-full h-8 cursor-pointer">
+                    </div>
+                </template>
+            </div>
+            <div class="mt-8 flex gap-2">
+                <button @click="resetTheme()" class="flex-1 py-2 border-2 border-black font-black text-[10px] uppercase">Reset</button>
+                <button @click="showSettings = false" class="flex-1 py-2 bg-black text-white font-black text-[10px] uppercase">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div x-show="toast.show" class="fixed bottom-20 left-1/2 -translate-x-1/2 md:left-auto md:right-8 z-[100]" x-transition>
+        <div class="bg-black text-white px-6 py-3 border-2 border-black shadow-premium font-black text-[9px] uppercase tracking-widest" x-text="toast.message"></div>
     </div>
 
     <script>
         function excelApp() {
             return {
                 sheets: [], activeSheetIndex: 0, search: '', saving: false, hasChanges: false, toast: { show: false, message: '' }, showSettings: false,
-                page: 1, perPage: 50, // Pagination settings
+                page: 1, perPage: 50,
                 theme: { bgMain: '#ffffff', bgSecondary: '#f9f9f9', textMain: '#000000', accentColor: '#000000', accentText: '#ffffff', borderColor: '#000000', shadowColor: '#000000' },
 
                 initData(data) {
                     this.sheets = data;
-                    const savedTheme = localStorage.getItem('abiraja_theme');
-                    if (savedTheme) { this.theme = JSON.parse(savedTheme); this.updateTheme(); }
+                    const saved = localStorage.getItem('abiraja_theme');
+                    if (saved) { this.theme = JSON.parse(saved); this.updateTheme(); }
                 },
 
                 updateTheme() {
@@ -214,7 +204,6 @@
 
                 currentSheet() { return this.sheets[this.activeSheetIndex] || { data: { headers: [], rows: [] } }; },
 
-                // Optimized Row Calculation with Pagination
                 totalRows() {
                     const rows = this.currentSheet().data.rows || [];
                     if (!this.search) return rows.length;
@@ -238,7 +227,7 @@
                 addRow() {
                     const h = this.currentSheet().data.headers;
                     const newRow = {}; h.forEach(col => newRow[col] = '');
-                    this.currentSheet().data.rows.unshift(newRow); // Add to top
+                    this.currentSheet().data.rows.unshift(newRow);
                     this.hasChanges = true; this.page = 1;
                 },
 
@@ -268,7 +257,22 @@
                     let name = prompt("Nama Sheet:"); if (!name) return;
                     const res = await fetch('/admin/sheets', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name }) });
                     const result = await res.json();
-                    if (result.success) { this.sheets.push(result.sheet); this.activeSheetIndex = this.sheets.length - 1; this.page = 1; }
+                    if (result.success) { this.sheets.push(result.sheet); this.activeSheetIndex = this.sheets.length - 1; this.page = 1; this.showToast('Sheet baru!'); }
+                },
+
+                async renameSheet(id, index) {
+                    let newName = prompt("Rename Sheet:", this.sheets[index].name);
+                    if (newName && newName !== this.sheets[index].name) {
+                        const res = await fetch(`/admin/sheets/${id}/rename`, { 
+                            method: 'PATCH', 
+                            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, 
+                            body: JSON.stringify({ name: newName }) 
+                        });
+                        if ((await res.json()).success) {
+                            this.sheets[index].name = newName;
+                            this.showToast('Berhasil di-Rename!');
+                        }
+                    }
                 },
 
                 async deleteSheet(id, index) {
@@ -280,8 +284,8 @@
                 async saveCurrentSheet() {
                     this.saving = true;
                     try {
-                        await fetch(`/admin/sheets/${this.currentSheet().id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ data: this.currentSheet().data }) });
-                        this.showToast('Tersimpan!'); this.hasChanges = false;
+                        const res = await fetch(`/admin/sheets/${this.currentSheet().id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ data: this.currentSheet().data }) });
+                        if (res.ok) { this.showToast('Data Tersimpan!'); this.hasChanges = false; }
                     } finally { this.saving = false; }
                 },
 
@@ -294,9 +298,9 @@
 
                 importExcel(event) {
                     const file = event.target.files[0]; if (!file) return;
-                    this.showToast('Memproses...');
+                    this.showToast('Memproses & Menyimpan...');
                     const reader = new FileReader();
-                    reader.onload = (e) => {
+                    reader.onload = async (e) => {
                         const data = new Uint8Array(e.target.result);
                         const workbook = XLSX.read(data, { type: 'array' });
                         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -305,7 +309,11 @@
                             this.currentSheet().data.headers = Object.keys(json[0]);
                             this.currentSheet().data.rows = json;
                             this.hasChanges = true; this.page = 1;
-                            this.showToast('Import Berhasil!');
+                            
+                            // AUTO SAVE AFTER IMPORT
+                            await this.saveCurrentSheet();
+                            this.showToast('Import & Auto-Save Berhasil!');
+                            event.target.value = "";
                         }
                     };
                     reader.readAsArrayBuffer(file);
