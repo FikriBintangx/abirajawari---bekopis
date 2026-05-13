@@ -25,76 +25,76 @@
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main);
             color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         .font-display { font-family: 'Outfit', sans-serif; }
         .shadow-premium { box-shadow: 8px 8px 0px 0px var(--shadow-color); }
-        .btn-black { background: var(--accent-color); color: var(--accent-text); transition: all 0.2s ease; }
+        .btn-black { background: var(--accent-color); color: var(--accent-text); transition: all 0.2s ease; border: 2px solid var(--border-color); }
         .btn-black:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.1); }
         
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        [x-cloak] { display: none !important; }
+        /* Custom Scrollbar for Premium Feel */
+        .custom-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+        .custom-scroll::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--border-color); border: 2px solid var(--bg-secondary); }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-        @media (max-width: 768px) {
-            .mobile-stack { flex-direction: column; gap: 1rem; }
-            .mobile-hide { display: none; }
-            .mobile-full { width: 100%; }
-        }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-hidden" x-data="excelApp()" x-init="initData({{ $sheets }})" x-cloak>
+<body x-data="excelApp()" x-init="initData({{ $sheets }})" x-cloak>
     
-    <!-- Top Header -->
-    <header class="border-b-4 border-black px-6 md:px-8 py-4 flex justify-between items-center bg-white sticky top-0 z-50 shrink-0" style="border-color: var(--border-color); background-color: var(--bg-main);">
-        <div class="flex items-center gap-4 md:gap-6">
-            <div class="w-8 h-8 md:w-10 md:h-10 bg-black text-white flex items-center justify-center font-bold text-lg md:text-xl border-2 border-black rotate-3" style="background-color: var(--accent-color); color: var(--accent-text);">A</div>
+    <!-- Header -->
+    <header class="border-b-4 border-black px-6 py-3 flex justify-between items-center bg-white z-50 shrink-0" style="border-color: var(--border-color); background-color: var(--bg-main);">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-black text-white flex items-center justify-center font-bold text-xl border-2 border-black rotate-2" style="background-color: var(--accent-color); color: var(--accent-text);">A</div>
             <div>
-                <h1 class="font-display font-bold tracking-tighter text-lg md:text-2xl uppercase leading-none">Abi Raja Wari</h1>
-                <p class="text-[8px] md:text-[9px] font-bold tracking-[0.3em] uppercase opacity-40 mt-1">Backoffice</p>
+                <h1 class="font-display font-black tracking-tighter text-2xl uppercase leading-none">Abi Raja Wari</h1>
+                <p class="text-[9px] font-bold tracking-[0.2em] uppercase opacity-40 mt-0.5">Control Center</p>
             </div>
         </div>
-        <div class="flex items-center gap-2 md:gap-4">
-            <button @click="showSettings = true" class="p-2 md:p-3 border-2 border-black hover:bg-black hover:text-white transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-            <button @click="saveCurrentSheet()" class="btn-black px-4 md:px-6 py-2 md:py-2.5 border-2 border-black flex items-center gap-2 text-[10px] font-black uppercase">
-                <span x-text="saving ? '...' : 'SIMPAN'"></span>
+        <div class="flex items-center gap-3">
+            <button @click="showSettings = true" class="p-2 border-2 border-black hover:bg-black hover:text-white transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            <button @click="saveCurrentSheet()" class="btn-black px-5 py-2 font-black text-[10px] flex items-center gap-2">
+                <span x-text="saving ? 'MENGIRIM...' : 'SIMPAN DATA'"></span>
             </button>
         </div>
     </header>
 
     <!-- Toolbar -->
-    <div class="px-6 md:px-8 py-3 md:py-4 flex flex-col md:flex-row justify-between items-center border-b-2 border-black gap-4 shrink-0">
-        <div class="flex gap-2 items-center mobile-full overflow-x-auto hide-scrollbar pb-1">
+    <div class="px-6 py-3 border-b-2 border-black flex flex-wrap items-center justify-between gap-4 shrink-0" style="border-color: var(--border-color);">
+        <div class="flex items-center gap-2 overflow-x-auto hide-scrollbar">
             <button @click="addRow()" class="px-4 py-2 border-2 border-black font-black text-[9px] uppercase hover:bg-black hover:text-white transition-all">+ Baris</button>
             <button @click="addColumn()" class="px-4 py-2 border-2 border-black font-black text-[9px] uppercase hover:bg-black hover:text-white transition-all">+ Kolom</button>
             <button @click="createNewSheet()" class="px-4 py-2 border-2 border-black border-dashed font-black text-[9px] uppercase hover:bg-black hover:text-white transition-all">+ Sheet</button>
-            <div class="w-[1px] bg-black/10 mx-2 h-4"></div>
+            <div class="w-[1px] bg-black/10 mx-2 h-5"></div>
             <div class="relative group">
                 <input type="file" @change="importExcel($event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".xlsx, .xls, .csv">
-                <button class="px-4 py-2 border-2 border-blue-600 text-blue-600 font-black text-[9px] uppercase group-hover:bg-blue-600 group-hover:text-white transition-all">Import</button>
+                <button class="px-4 py-2 border-2 border-blue-600 text-blue-600 font-black text-[9px] uppercase hover:bg-blue-600 hover:text-white transition-all">Import Excel</button>
             </div>
-            <button @click="exportToExcel()" class="px-4 py-2 border-2 border-green-600 text-green-600 font-black text-[9px] uppercase hover:bg-green-600 hover:text-white transition-all">Export</button>
+            <button @click="exportToExcel()" class="px-4 py-2 border-2 border-green-600 text-green-600 font-black text-[9px] uppercase hover:bg-green-600 hover:text-white transition-all">Export Excel</button>
         </div>
 
-        <div class="flex items-center gap-4 mobile-full justify-between">
-            <div class="flex items-center gap-2">
-                <button @click="prevPage()" :disabled="page === 1" class="p-1.5 border-2 border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg></button>
-                <span class="text-[9px] font-black uppercase">Pg <span x-text="page"></span></span>
-                <button @click="nextPage()" :disabled="page >= totalPages()" class="p-1.5 border-2 border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <div class="flex items-center gap-4 ml-auto">
+            <div class="flex items-center gap-1.5" x-show="totalPages() > 1">
+                <button @click="prevPage()" :disabled="page === 1" class="p-1.5 border-2 border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="15 18 9 12 15 6"/></svg></button>
+                <div class="px-3 py-1 border-2 border-black font-black text-[9px]">HALAMAN <span x-text="page"></span> / <span x-text="totalPages()"></span></div>
+                <button @click="nextPage()" :disabled="page >= totalPages()" class="p-1.5 border-2 border-black disabled:opacity-20"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="9 18 15 12 9 6"/></svg></button>
             </div>
-            <div class="relative flex-1 md:w-48">
-                <input type="text" x-model="search" placeholder="Cari..." class="w-full pl-8 pr-4 py-2 border-2 border-black text-[10px] font-bold outline-none focus:bg-black focus:text-white">
+            <div class="relative w-40 md:w-56">
+                <input type="text" x-model="search" placeholder="Pencarian..." class="w-full pl-8 pr-4 py-2 border-2 border-black text-[10px] font-black outline-none focus:bg-black focus:text-white transition-all">
                 <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 opacity-30" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             </div>
         </div>
     </div>
 
-    <!-- Main Workspace -->
-    <div class="flex-1 overflow-auto p-4 md:p-6" style="background-color: var(--bg-secondary);">
-        <div class="bg-white border-4 border-black shadow-premium overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-max">
-                <thead>
+    <!-- Table Workspace (Full Height Scrollable) -->
+    <div class="flex-1 overflow-hidden flex flex-col p-4 md:p-6" style="background-color: var(--bg-secondary);">
+        <div class="flex-1 overflow-auto border-4 border-black shadow-premium bg-white custom-scroll" style="border-color: var(--border-color);">
+            <table class="w-full text-left border-collapse min-w-max relative">
+                <thead class="sticky top-0 z-20">
                     <tr class="bg-black text-white" style="background-color: var(--accent-color); color: var(--accent-text);">
                         <th class="px-4 py-3 w-14 text-center border-r border-white/20 text-[9px] font-black">#</th>
                         <template x-for="(header, hIndex) in currentSheet().data.headers" :key="hIndex">
@@ -131,31 +131,36 @@
         </div>
     </div>
 
-    <!-- Footer Tabs -->
-    <footer class="border-t-4 border-black bg-white flex items-center shrink-0 h-14 overflow-hidden" style="border-color: var(--border-color); background-color: var(--bg-main);">
+    <!-- Bottom Tabs -->
+    <footer class="border-t-4 border-black bg-white flex items-center shrink-0 h-12 md:h-14 overflow-hidden" style="border-color: var(--border-color); background-color: var(--bg-main);">
         <div class="flex flex-1 overflow-x-auto hide-scrollbar h-full items-center">
             <template x-for="(sheet, index) in sheets" :key="sheet.id">
-                <div class="h-full border-r-2 border-black flex items-center shrink-0" :class="activeSheetIndex === index ? 'bg-black text-white' : 'hover:bg-black/5'">
-                    <button @click="activeSheetIndex = index; page = 1" class="h-full px-6 flex items-center gap-3 transition-all relative">
-                        <span @dblclick="renameSheet(sheet.id, index)" class="text-[10px] font-black uppercase tracking-widest whitespace-nowrap cursor-edit" x-text="sheet.name" title="Double-click to rename"></span>
+                <div class="h-full border-r-2 border-black flex items-center shrink-0 group relative" :class="activeSheetIndex === index ? 'bg-black text-white' : 'hover:bg-black/5'">
+                    <button @click="activeSheetIndex = index; page = 1" class="h-full px-6 flex items-center gap-3 transition-all">
+                        <span class="text-[10px] font-black uppercase tracking-widest whitespace-nowrap" x-text="sheet.name"></span>
                     </button>
-                    <button @click="deleteSheet(sheet.id, index)" class="pr-4 py-4 text-red-500 hover:scale-125 transition-all" x-show="sheets.length > 1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <!-- Rename Action -->
+                    <button @click="renameSheet(sheet.id, index)" class="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-white/20 transition-all text-[10px]" title="Rename">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <!-- Delete Action -->
+                    <button @click="deleteSheet(sheet.id, index)" class="p-1.5 opacity-0 group-hover:opacity-100 text-red-500 hover:scale-125 transition-all mr-2" x-show="sheets.length > 1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
                 </div>
             </template>
         </div>
         <div class="px-6 border-l-2 border-black h-full hidden md:flex items-center bg-black/5">
-            <p class="text-[9px] font-black uppercase tracking-tighter opacity-30">ABIRAJAVARI &copy; 2026</p>
+            <p class="text-[9px] font-black uppercase tracking-widest opacity-20">ABI RAJA WARI &copy; 2026</p>
         </div>
     </footer>
 
-    <!-- Modals (Settings) -->
+    <!-- Settings Modal -->
     <div x-show="showSettings" class="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm" x-transition>
-        <div class="bg-white border-4 border-black w-full max-w-sm shadow-premium p-8" @click.away="showSettings = false">
-            <h2 class="font-display font-black text-xl uppercase mb-6 italic underline decoration-4 underline-offset-4">Theme Settings</h2>
+        <div class="bg-white border-4 border-black w-full max-w-sm shadow-premium p-8 relative" @click.away="showSettings = false">
+            <h2 class="font-display font-black text-xl uppercase mb-6 italic underline decoration-4">Theme Configuration</h2>
             <div class="grid grid-cols-2 gap-4">
-                <template x-for="(label, key) in {bgMain: 'Latar', bgSecondary: 'Tabel', textMain: 'Teks', accentColor: 'Aksen', accentText: 'Teks Aksen', borderColor: 'Garis'}">
+                <template x-for="(label, key) in {bgMain: 'Halaman', bgSecondary: 'Tabel', textMain: 'Teks Utama', accentColor: 'Aksen', accentText: 'Teks Aksen', borderColor: 'Garis'}">
                     <div class="flex flex-col gap-1">
                         <label class="text-[9px] font-black uppercase opacity-60" x-text="label"></label>
                         <input type="color" x-model="theme[key]" @input="updateTheme()" class="w-full h-8 cursor-pointer">
@@ -164,21 +169,21 @@
             </div>
             <div class="mt-8 flex gap-2">
                 <button @click="resetTheme()" class="flex-1 py-2 border-2 border-black font-black text-[10px] uppercase">Reset</button>
-                <button @click="showSettings = false" class="flex-1 py-2 bg-black text-white font-black text-[10px] uppercase">Tutup</button>
+                <button @click="showSettings = false" class="flex-1 py-2 bg-black text-white font-black text-[10px] uppercase">Selesai</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast -->
+    <!-- Toast Notification -->
     <div x-show="toast.show" class="fixed bottom-20 left-1/2 -translate-x-1/2 md:left-auto md:right-8 z-[100]" x-transition>
-        <div class="bg-black text-white px-6 py-3 border-2 border-black shadow-premium font-black text-[9px] uppercase tracking-widest" x-text="toast.message"></div>
+        <div class="bg-black text-white px-6 py-3 border-2 border-black shadow-premium font-black text-[9px] uppercase tracking-[0.2em]" x-text="toast.message"></div>
     </div>
 
     <script>
         function excelApp() {
             return {
                 sheets: [], activeSheetIndex: 0, search: '', saving: false, hasChanges: false, toast: { show: false, message: '' }, showSettings: false,
-                page: 1, perPage: 50,
+                page: 1, perPage: 100, // Increased to 100 for better balance
                 theme: { bgMain: '#ffffff', bgSecondary: '#f9f9f9', textMain: '#000000', accentColor: '#000000', accentText: '#ffffff', borderColor: '#000000', shadowColor: '#000000' },
 
                 initData(data) {
@@ -257,7 +262,7 @@
                     let name = prompt("Nama Sheet:"); if (!name) return;
                     const res = await fetch('/admin/sheets', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ name }) });
                     const result = await res.json();
-                    if (result.success) { this.sheets.push(result.sheet); this.activeSheetIndex = this.sheets.length - 1; this.page = 1; this.showToast('Sheet baru!'); }
+                    if (result.success) { this.sheets.push(result.sheet); this.activeSheetIndex = this.sheets.length - 1; this.page = 1; this.showToast('Sheet Baru Ditambahkan'); }
                 },
 
                 async renameSheet(id, index) {
@@ -270,13 +275,13 @@
                         });
                         if ((await res.json()).success) {
                             this.sheets[index].name = newName;
-                            this.showToast('Berhasil di-Rename!');
+                            this.showToast('Sheet Berhasil di-Rename');
                         }
                     }
                 },
 
                 async deleteSheet(id, index) {
-                    if(!confirm('Hapus sheet?')) return;
+                    if(!confirm('Hapus sheet ini permanen?')) return;
                     const res = await fetch(`/admin/sheets/${id}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
                     if ((await res.json()).success) { this.sheets.splice(index, 1); this.activeSheetIndex = 0; this.page = 1; }
                 },
@@ -285,7 +290,7 @@
                     this.saving = true;
                     try {
                         const res = await fetch(`/admin/sheets/${this.currentSheet().id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ data: this.currentSheet().data }) });
-                        if (res.ok) { this.showToast('Data Tersimpan!'); this.hasChanges = false; }
+                        if (res.ok) { this.showToast('Data Berhasil Disimpan'); this.hasChanges = false; }
                     } finally { this.saving = false; }
                 },
 
@@ -298,7 +303,7 @@
 
                 importExcel(event) {
                     const file = event.target.files[0]; if (!file) return;
-                    this.showToast('Memproses & Menyimpan...');
+                    this.showToast('Mengimport & Sinkronisasi...');
                     const reader = new FileReader();
                     reader.onload = async (e) => {
                         const data = new Uint8Array(e.target.result);
@@ -309,10 +314,8 @@
                             this.currentSheet().data.headers = Object.keys(json[0]);
                             this.currentSheet().data.rows = json;
                             this.hasChanges = true; this.page = 1;
-                            
-                            // AUTO SAVE AFTER IMPORT
                             await this.saveCurrentSheet();
-                            this.showToast('Import & Auto-Save Berhasil!');
+                            this.showToast('Import & Auto-Save Selesai!');
                             event.target.value = "";
                         }
                     };
